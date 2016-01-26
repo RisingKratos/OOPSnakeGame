@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace OOPSnakeGame
 {
@@ -12,10 +15,11 @@ namespace OOPSnakeGame
         Eat,
         Stop,
         Save,
-        Retrieve
+        Retrieve,
+        Default
     }
 
-    public class Snake : IDrawable
+    public class Snake : IChangable
     {
         char mark = 's';
 
@@ -32,8 +36,6 @@ namespace OOPSnakeGame
             corpus.Add(new Point { x = StartingPointX, y = StartingPointY }); //узнать, как это использовать с this.x = x, this.y = y
             Draw();
         }
-        
-        
 
         public void Draw()
         {
@@ -57,18 +59,20 @@ namespace OOPSnakeGame
 
         public Action Reflect(Point direction, Point foodPoint)
         {
-            if (foodPoint.x == corpus[0].x + direction.x && foodPoint.y == corpus[0].y + direction.y)
+            Clear();
+            if (foodPoint.x == corpus[0].x + direction.x && foodPoint.y == corpus[0].y + direction.y)   
             {
                 corpus.Insert(0, foodPoint);
                 Draw();
-                return Action.Eat;
+                return Action.Eat;  //условие попадения в еду
             }
+
             else if (Console.WindowWidth - 1 == corpus[0].x + direction.x || 
                      Console.WindowHeight - 1 == corpus[0].y + direction.y || 
                      1 == corpus[0].x + direction.x || 
                      1 == corpus[0].y + direction.y)
             {
-                return Action.Stop;
+                return Action.Stop; //условия выхода за границы консоли
             }
 
             for (int i = corpus.Count - 1; i > 0; i--)
@@ -84,5 +88,7 @@ namespace OOPSnakeGame
 
             return Action.Go;
         }
+        
     }
+
 }

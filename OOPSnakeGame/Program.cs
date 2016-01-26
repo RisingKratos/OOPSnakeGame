@@ -6,19 +6,23 @@ using System.Threading.Tasks;
 
 namespace OOPSnakeGame
 {
-    interface IDrawable
+    interface IChangable
     {
         void Draw();
+        void Clear();
     }
+
     public class Program
     {
         public static void Main(string[] args)
         {
             Console.SetWindowSize(50, 50);
 
-            Snake snake = new Snake(25, 25);
+            Progress progress = new Progress();
 
-            Food food = new Food();
+            Snake snake = progress.SnakeRetriever();
+
+            Food food = progress.FoodRetriever();
 
             ConsoleKeyInfo command;
 
@@ -27,6 +31,8 @@ namespace OOPSnakeGame
             while (true)
             {
                 command = Console.ReadKey();
+
+                Action action = Action.Default;
 
                 switch (command.Key)
                 {
@@ -47,9 +53,12 @@ namespace OOPSnakeGame
                         direction.y = 0;
                         break;
                     case ConsoleKey.S:
+                        progress.ProgressSaver(snake,food);
+                        action = Action.Save;
                         //сохранить
                         break;
                     case ConsoleKey.R:
+                        action = Action.Retrieve;
                         //восстановить
                         break;
                     case ConsoleKey.Escape:
@@ -58,8 +67,33 @@ namespace OOPSnakeGame
                         break;
                 }
 
-                Action action = snake.Reflect(direction,food.generatingPoint);
-                
+                if (!(action.Equals(Action.Save)) || !(action.Equals(Action.Retrieve)) || !(action.Equals(Action.Default)))
+                {
+                    action = snake.Reflect(direction, food.generatingPoint);
+                }
+
+                switch (action)
+                {
+                    case Action.Go:
+                        break;
+                    case Action.Eat:
+                        food = new Food();
+                        break;
+                    case Action.Stop:
+                        Console.SetCursorPosition(Console.WindowHeight / 2, Console.WindowWidth / 2);
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write("Game Is Over!!!");
+                        break;
+                    case Action.Save:
+                        action = Action.Default;
+                        break;
+                    case Action.Default:
+                        break;
+                    case Action.Retrieve:
+                        break;
+                    default: break;
+                }
+
             }
             //петля закончилась
         }

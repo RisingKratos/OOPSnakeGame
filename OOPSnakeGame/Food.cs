@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 
 namespace OOPSnakeGame
 {
-    public class Food : IDrawable
+    public class Food : IChangable
     {
         char mark = '*';
+
         public Point generatingPoint = new Point();
 
-        public Food()
+        public Food()   //уже пустой конструктор
         {
             generatingPoint.x = new Random().Next() % 50 + 1;
             generatingPoint.y = new Random().Next() % 50 + 1;
+
             Draw();
         }
 
@@ -24,5 +26,14 @@ namespace OOPSnakeGame
             Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.Write(mark);
         }
+
+        public void Clear()
+        {
+            Console.SetCursorPosition(generatingPoint.x, generatingPoint.y);
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.Write(' ');
+        }
+
     }
+
 }
