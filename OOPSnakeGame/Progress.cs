@@ -15,9 +15,9 @@ namespace OOPSnakeGame
         {
             if (File.Exists("snake.txt"))
             {
-                BinaryFormatter BinaryInstrument = new BinaryFormatter();
-                FileStream snakeStream = new FileStream("snake.txt", FileMode.Open, FileAccess.Read);
-                Snake snake = BinaryInstrument.Deserialize(snakeStream) as Snake;
+                XmlSerializer XmlInstrument = new XmlSerializer(typeof(Snake));
+                FileStream snakeStream = new FileStream("snake.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                Snake snake = XmlInstrument.Deserialize(snakeStream) as Snake;
                 snakeStream.Close();
                 return snake;
             }
@@ -31,11 +31,12 @@ namespace OOPSnakeGame
             if (File.Exists("food.txt"))
             {
                 XmlSerializer XmlInstrument = new XmlSerializer(typeof(Food));
-                FileStream foodStream = new FileStream("food.txt", FileMode.Open, FileAccess.Read);
+                FileStream foodStream = new FileStream("food.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite);
                 Food food = XmlInstrument.Deserialize(foodStream) as Food;
                 foodStream.Close();
                 return food;
             }
+
             return new Food();
         }
 
@@ -43,36 +44,22 @@ namespace OOPSnakeGame
         {
             FileStream snakeStream = new FileStream("snake.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite);
             FileStream foodStream = new FileStream("food.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            try
-            {
-                
-                if (File.Exists("snake.txt"))
-                {
-                    File.Delete("snake.txt");
-                    BinaryFormatter BinaryInstrument = new BinaryFormatter();
-                    
-                    BinaryInstrument.Serialize(snakeStream, snake);
-                }
 
-                if (File.Exists("food.txt"))
-                {
-                    File.Delete("food.txt");
-                    XmlSerializer XmlInstrument = new XmlSerializer(typeof(Food));
-                    
-                    XmlInstrument.Serialize(foodStream, food);
-                }
-            }
-            catch (Exception)
-            {
+            XmlSerializer XmlInstrument = new XmlSerializer(typeof(Snake));
 
-            }
-            finally
-            {
-                snakeStream.Close();
-                foodStream.Close();
-            }
+            Console.Write(snake.ToString());
+
+            XmlInstrument.Serialize(snakeStream, snake);
+
+            snakeStream.Close();
+
+            XmlInstrument = new XmlSerializer(typeof(Food));
+
+            XmlInstrument.Serialize(foodStream, food);
+
+            foodStream.Close();
 
         }
-        
+
     }
 }

@@ -88,7 +88,13 @@ namespace OOPSnakeGame
 
             return Action.Go;
         }
-        
+
+        public override string ToString()
+        {
+            string template = "x - {0}, y - {1}, mark - {2}";
+            return string.Format(template, corpus[0].x, corpus[0].y, mark);
+        }
+
     }
 
 }

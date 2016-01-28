@@ -20,9 +20,11 @@ namespace OOPSnakeGame
 
             Progress progress = new Progress();
 
-            Snake snake = progress.SnakeRetriever();
+            //Snake snake = progress.SnakeRetriever();
+            Snake snake = new Snake(Console.WindowHeight / 2, Console.WindowWidth / 2);
 
-            Food food = progress.FoodRetriever();
+            //Food food = progress.FoodRetriever();
+            Food food = new Food();
 
             ConsoleKeyInfo command;
 
@@ -67,10 +69,7 @@ namespace OOPSnakeGame
                         break;
                 }
 
-                if (!(action.Equals(Action.Save)) || !(action.Equals(Action.Retrieve)) || !(action.Equals(Action.Default)))
-                {
                     action = snake.Reflect(direction, food.generatingPoint);
-                }
 
                 switch (action)
                 {
